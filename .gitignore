@@ -14,3 +14,6 @@ example
 venv
 .env*
 .tags*
+bin
+lib
+share

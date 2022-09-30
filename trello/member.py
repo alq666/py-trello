@@ -70,17 +70,22 @@ class Member(TrelloBase):
         return [Board.from_json(trello_client=self.client, organization=organizations.get(obj['idOrganization']), json_obj=obj) for obj in json_obj]
 
     @classmethod
-    def from_json(cls, trello_client, json_obj):
+    def from_json(cls, trello_client, json_obj, from_membership=False):
         """
         Deserialize the organization json object to a member object
 
         :trello_client: the trello client
         :json_obj: the member json object
         """
-
-        member = Member(trello_client, json_obj['id'], full_name=json_obj['fullName'])
-        member.username = json_obj.get('username', '')
-        member.initials = json_obj.get('initials', '')
+        if from_membership:
+            member = Member(trello_client, json_obj['idMember'], full_name=json_obj['member']['fullName'])
+            member.username = json_obj['member'].get('username', '')
+            member.initials = json_obj['member'].get('initials', '')
+            member.deactivated = json_obj['deactivated']
+        else:
+            member = Member(trello_client, json_obj['id'], full_name=json_obj['fullName'])
+            member.username = json_obj.get('username', '')
+            member.initials = json_obj.get('initials', '')
         # cannot close an organization
         # organization.closed = json_obj['closed']
         return member

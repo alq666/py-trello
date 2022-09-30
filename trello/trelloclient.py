@@ -302,7 +302,7 @@ class TrelloClient(object):
             raise Exception("Webhook creating failed: %s" % response.text)
 
     def search(self, query, partial_match=False, models=[],
-               board_ids=[], org_ids=[], card_ids=[], cards_limit=10):
+               board_ids=[], org_ids=[], card_ids=[], boards_limit=10, cards_limit=10):
         """
         Search trello given a query string.
 
@@ -315,6 +315,7 @@ class TrelloClient(object):
         :param list board_ids: Comma-separated list of boards to limit search
         :param org_ids: Comma-separated list of organizations to limit search
         :param card_ids: Comma-separated list of cards to limit search
+        :param boards_limit: The maximum number of boards to return (up to 1000)
         :param cards_limit: The maximum number of cards to return (up to 1000)
 
         :return: All objects matching the search criterial.  These can
@@ -337,6 +338,7 @@ class TrelloClient(object):
         # Limit search to a particular subset of objects
         if board_ids:
             query_params['idBoards'] = board_ids
+        query_params['boards_limit'] = boards_limit
         if org_ids:
             query_params['idOrganizations'] = org_ids
         if card_ids:

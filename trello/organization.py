@@ -72,8 +72,16 @@ class Organization(TrelloBase):
         json_obj = self.client.fetch_json(
             '/organizations/' + self.id + '/members',
             query_params={'filter': 'all',
-                          'fields': 'id,fullName,username,initials'})
+                          'fields': 'id,fullName,username,initials,status'})
         return [Member.from_json(trello_client=self.client, json_obj=obj) for obj in json_obj]
+
+    def get_memberships(self):
+        json_obj = self.client.fetch_json(
+            '/organizations/' + self.id + '/memberships',
+            query_params={'filter': 'active',
+                          'member': 'true'})
+        return [Member.from_json(trello_client=self.client, json_obj=obj, from_membership=True) for obj in json_obj]
+
 
     def add_member(self, member, member_type="normal"):
         json_obj = self.client.fetch_json(
